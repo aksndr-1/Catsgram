@@ -1,30 +1,20 @@
 package ru.yandex.practicum.catsgram.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import java.time.Instant;
-import java.util.Objects;
 
 @Data
+@EqualsAndHashCode(of = "email")
 public class User {
     private Long id;
+    @NonNull
     private String username;
     private String email;
     private String password;
     private Instant registrationDate;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, email);
-    }
 
     @Override
     public String toString() {
