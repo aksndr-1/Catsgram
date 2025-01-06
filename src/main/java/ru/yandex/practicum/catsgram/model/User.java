@@ -10,7 +10,6 @@ import java.time.Instant;
 @EqualsAndHashCode(of = "email")
 public class User {
     private Long id;
-    @NonNull
     private String username;
     private String email;
     private String password;
