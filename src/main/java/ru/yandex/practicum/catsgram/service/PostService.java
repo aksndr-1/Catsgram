@@ -1,9 +1,11 @@
 package ru.yandex.practicum.catsgram.service;
 
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.catsgram.enums.SortOrder;
 import ru.yandex.practicum.catsgram.exception.ConditionsNotMetException;
 import ru.yandex.practicum.catsgram.exception.NotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.comparator.PostsComparator;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -15,6 +17,7 @@ import java.util.Optional;
 // нужно добавить в контекст приложения
 @Service
 public class PostService {
+
     private final Map<Long, Post> posts = new HashMap<>();
 
     public Optional<Post> findById(int postId) {
@@ -23,8 +26,9 @@ public class PostService {
                 .findFirst();
     }
 
-    public Collection<Post> findAll() {
-        return posts.values();
+    public Collection<Post> findAll(int size, int from, SortOrder sort) {
+        PostsComparator postsComparator = new PostsComparator(sort);
+        return posts.values().stream().sorted(postsComparator).skip(from).limit(size).toList();
     }
 
     public Post create(Post post) {
