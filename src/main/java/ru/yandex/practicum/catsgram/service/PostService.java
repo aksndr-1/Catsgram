@@ -20,7 +20,7 @@ public class PostService {
 
     private final Map<Long, Post> posts = new HashMap<>();
 
-    public Optional<Post> findById(int postId) {
+    public Optional<Post> findById(long postId) {
         return posts.values().stream()
                 .filter(x -> x.getId() == postId)
                 .findFirst();
