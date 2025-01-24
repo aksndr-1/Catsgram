@@ -4,16 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.enums.SortOrder;
+import ru.yandex.practicum.catsgram.exception.ParameterNotValidException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
+    private final static List<String> sorts = List.of("asc", "desc", "ascending", "descending");
 
     @Autowired
     public PostController(PostService postService) {
@@ -31,6 +34,19 @@ public class PostController {
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "asc") String sort
     ) {
+        sort = sort.toLowerCase();
+        if (!sorts.contains(sort)) {
+            throw new ParameterNotValidException("sort", "sort must be one of " + sorts);
+        }
+
+        if (size <= 0) {
+            throw new ParameterNotValidException("size", "size must be positive");
+        }
+
+        if (from < 0) {
+            throw new ParameterNotValidException("from", "from must be positive");
+        }
+
         return postService.findAll(size, from, SortOrder.from(sort));
     }
 
